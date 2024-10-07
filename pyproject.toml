@@ -6,8 +6,13 @@ authors = ["Jeffrey Wong <jvwong@outlook.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
+loguru = "^0.7.2"
+pydantic = "^2.9.2"
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+black = "^24.8.0"
 
 [build-system]
 requires = ["poetry-core"]
