@@ -1,14 +1,17 @@
-# import sys
+import sys
 import argparse
+import json
 
+from typing import IO, Generator, Dict, Any
 from loguru import logger
+import json_stream
 
 ####################################################
 #            Logging
 ####################################################
 
 
-logger.add("cron_{time}.log")
+# logger.add("clustr_{time}.log")
 
 
 ####################################################
@@ -38,16 +41,13 @@ def get_opts():
 ####################################################
 
 
-# def csv2dict_reader(
-#     stream: IO,
-# ) -> Callable[[None], Generator[Dict[str, Any], None, None]]:
-#     """Return a reader that streams csv to dicts"""
-
-#     def _csv2dict_reader():
-#         reader = csv.DictReader(stream)
-#         yield from reader
-
-#     return _csv2dict_reader()
+def json2dict_reader(
+    stream: IO,
+) -> Generator[Dict[str, Any], None, None]:
+    """Return a reader that streams json to list of dicts"""
+    data = json_stream.load(stream)
+    reader = json_stream.to_standard_types(data)
+    yield from reader
 
 
 ####################################################
@@ -58,4 +58,6 @@ if __name__ == "__main__":
     opts = get_opts()
     logger.info("Run config: {opts}", opts=opts)
 
-    # pipeline = as_pipeline([csv2dict_reader(sys.stdin)])
+    reader = json2dict_reader(sys.stdin)
+    for item in reader:
+        print(json.dumps(item, indent=2))

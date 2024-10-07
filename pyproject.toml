@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.9"
 loguru = "^0.7.2"
 pydantic = "^2.9.2"
+json-stream = "^2.3.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.3"
