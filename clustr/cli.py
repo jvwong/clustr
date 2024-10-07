@@ -1,10 +1,10 @@
 import sys
 import argparse
-import json
+import json_stream
 
 from typing import IO, Generator, Dict, Any
 from loguru import logger
-import json_stream
+from clustr.cluster import get
 
 ####################################################
 #            Logging
@@ -59,5 +59,7 @@ if __name__ == "__main__":
     logger.info("Run config: {opts}", opts=opts)
 
     reader = json2dict_reader(sys.stdin)
-    for item in reader:
-        print(json.dumps(item, indent=2))
+    # for item in reader:
+    #     print(json.dumps(item, indent=2))
+    clusters = get(reader)
+    print(clusters)

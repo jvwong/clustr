@@ -33,15 +33,9 @@ Install the dependencies:
 
 ```bash
 $ poetry install
+# //TODO Couldn't get this to play nice in poetry
+$ conda install -c conda-forge sentence-transformers
 ```
-
-<!-- ### Pipeline
-
-Launch a pipeline to process daily updates from PubMed and dump the RethinkDB database:
-
-```bash
-$ ./scripts/cron/install.sh
-``` -->
 
 ## Testing
 
