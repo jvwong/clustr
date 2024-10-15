@@ -1,7 +1,7 @@
 import json_stream
 import json
 
-from typing import IO, Generator, Dict, Any, List
+from typing import Generator, Dict, Any, List
 
 ####################################################
 #                  Configuration
@@ -13,12 +13,13 @@ from typing import IO, Generator, Dict, Any, List
 ####################################################
 
 def json2dict_reader(
-    stream: IO,
+    inpath: str,
 ) -> Generator[Dict[str, Any], None, None]:
     """Return a reader that streams json to list of dicts"""
-    data = json_stream.load(stream)
-    reader = json_stream.to_standard_types(data)
-    yield from reader
+    with open(inpath, "r") as f:
+        data = json_stream.load(f)
+        reader = json_stream.to_standard_types(data)
+        yield from reader
 
 
 ####################################################

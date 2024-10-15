@@ -1,10 +1,8 @@
-import sys
 import argparse
 
-from typing import IO, Generator, Dict, Any
 from loguru import logger
 from clustr import cluster
-import util
+from clustr import util
 
 ####################################################
 #            Logging
@@ -19,19 +17,16 @@ import util
 ####################################################
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--threshold", nargs="?", type=float, default=str(0.990))
-parser.add_argument('--filepath', nargs='?', type=str, default='data/clusters.json')
+parser.add_argument("filename", type=str)
+parser.add_argument("--threshold", nargs="?", type=float, default=str(0.96))
+parser.add_argument("--outpath", nargs="?", type=str, default="data/clusters.json")
 
 
-def get_opts():
+def get_args():
     args = parser.parse_args()
-    opts = {
-        "threshold": args.threshold,
-        'filepath': args.filepath
-    }
-    if opts["threshold"] < 0 or opts["threshold"] > 1:
+    if args.threshold < 0 or args.threshold > 1:
         raise ValueError("threshold must be on [0, 1]")
-    return opts
+    return args
 
 
 ####################################################
@@ -39,15 +34,15 @@ def get_opts():
 ####################################################
 
 if __name__ == "__main__":
-    opts = get_opts()
-    logger.info("Run config: {opts}", opts=opts)
+    args = get_args()
+    logger.info("Run config: {args}")
 
     # Stream in json data from stdin
-    reader = util.json2dict_reader(sys.stdin)
+    reader = util.json2dict_reader(args.filename)
 
     # Cluster the data
     clusters, articles = cluster.get(reader)
     result = util.get_article_clusters(clusters, articles)
 
     # Write to file
-    util.json2file(result, opts.filepath)
+    util.json2file(result, args.outpath)
