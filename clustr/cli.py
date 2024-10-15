@@ -41,7 +41,8 @@ if __name__ == "__main__":
     reader = util.json2dict_reader(args.filename)
 
     # Cluster the data
-    clusters, articles = cluster.get(reader)
+    articles = util.unique_by([article for article in reader], "doi")
+    clusters = cluster.get(articles)
     result = util.get_article_clusters(clusters, articles)
 
     # Write to file

@@ -4,13 +4,19 @@ import json
 from typing import Generator, Dict, Any, List
 
 ####################################################
-#                  Configuration
+#                  List
 ####################################################
 
 
+def unique_by(collection: List[Dict[str, Any]], key: str) -> List[Dict[str, Any]]:
+    """Return a list of unique dictionaries by key"""
+    return list({v[key]: v for v in collection}.values())
+
+
 ####################################################
-#                  Extract
+#                  I/O
 ####################################################
+
 
 def json2dict_reader(
     inpath: str,
@@ -22,14 +28,7 @@ def json2dict_reader(
         yield from reader
 
 
-####################################################
-#                  I/O
-####################################################
-
-def json2file(
-    data: Dict[str, Any],
-    fpath: str = "clusters.json"
-):
+def json2file(data: Dict[str, Any], fpath: str = "clusters.json"):
     """Write json to file"""
     with open(fpath, "w") as writer:
         json.dump(data, writer, indent=2)
@@ -38,6 +37,7 @@ def json2file(
 ####################################################
 #                  Clusters
 ####################################################
+
 
 def get_article_clusters(
     clusters: List[List[int]],
