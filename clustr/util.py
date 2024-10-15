@@ -8,6 +8,11 @@ from typing import Generator, Dict, Any, List
 ####################################################
 
 
+def sort_descending_by(collection: List[Dict[str, Any]], key: str) -> List[Dict[str, Any]]:
+    """Return a list of dictionaries sorted by key, descending"""
+    return sorted(collection, key=lambda d: d[key], reverse=True)
+
+
 def unique_by(collection: List[Dict[str, Any]], key: str) -> List[Dict[str, Any]]:
     """Return a list of unique dictionaries by key"""
     return list({v[key]: v for v in collection}.values())
@@ -41,7 +46,7 @@ def json2file(data: Dict[str, Any], fpath: str = "clusters.json"):
 
 def get_article_clusters(
     clusters: List[List[int]],
-    articles: List[Dict[str, Any]],
+    articles: List[Dict[str, Any]]
 ):
     """Return a dictionary of clustered articles"""
     result = {}

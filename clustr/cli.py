@@ -35,13 +35,15 @@ def get_args():
 
 if __name__ == "__main__":
     args = get_args()
-    logger.info("Run config: {args}")
+    logger.info(vars(args))
 
     # Stream in json data from stdin
     reader = util.json2dict_reader(args.filename)
 
     # Cluster the data
-    articles = util.unique_by([article for article in reader], "doi")
+    articles = [article for article in reader]
+    articles = util.sort_descending_by(articles, "date")
+    articles = util.unique_by(articles, "doi")
     clusters = cluster.get(articles)
     result = util.get_article_clusters(clusters, articles)
 
