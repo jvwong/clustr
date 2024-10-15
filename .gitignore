@@ -7,12 +7,16 @@
 .coverage
 .pytest_cache
 
+# Misc
 .DS_Store
 .idea/*
 .python-version
+.vscode/*
 
 /docs/site/*
 .mypy_cache
 
 .venv
 /poetry.toml
+
+/data/*.json

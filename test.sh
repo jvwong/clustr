@@ -7,4 +7,4 @@ poetry run flake8 ./clustr --count --select=E9,F63,F7,F82 --show-source --statis
 poetry run flake8 ./clustr --count --exit-zero --max-complexity=10 --statistics
 
 echo "Type checking"
-poetry run mypy . --cache-dir=/dev/null
+poetry run mypy . --ignore-missing-imports  --cache-dir=/dev/null

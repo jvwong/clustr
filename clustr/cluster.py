@@ -2,7 +2,7 @@ import torch
 
 from adapters import AutoAdapterModel
 from loguru import logger
-from typing import List, Dict, Any
+from typing import Dict, Any
 
 from more_itertools import chunked
 from sentence_transformers import util as sbert_util
@@ -42,7 +42,7 @@ def load_encoder():
     return model, tokenizer
 
 
-def embed_evidence(articles: list[str], model: str, _batch_size: int = 32):
+def embed_evidence(articles: list[Dict[str, Any]], model: str, _batch_size: int = 32):
     """Jointly embed the titles and abstracts in articles for the given encoder."""
     encoder, tokenizer = load_encoder()
     embeddings = []
@@ -64,7 +64,7 @@ def embed_evidence(articles: list[str], model: str, _batch_size: int = 32):
     return torch.cat(embeddings, dim=0)
 
 
-def get(articles: List[Dict[str, Any]], threshold: float) -> List[List[int]]:
+def get(articles: list[Dict[str, Any]], threshold: float) -> list[list[int]]:
     logger.info("Running get")
     num_articles = len(articles)
 
@@ -80,46 +80,46 @@ def get(articles: List[Dict[str, Any]], threshold: float) -> List[List[int]]:
     embeddings = embed_evidence(articles, model=SPECTER_MODEL)
     clusters = sbert_util.community_detection(embeddings, min_community_size=min_community_size, threshold=threshold)
 
-    #                 # Try lowering the threshold if no clusters are found
-    #                 backoff_threshold = threshold
-    #                 while len(clusters) < MIN_ARTICLES_TO_AVOID_BACKOFF and backoff_threshold > 0.9:
-    #                     backoff_threshold -= BACKOFF_THRESHOLD
-    #                     st.warning(
-    #                         f"No clusters found with threshold {threshold},"
-    #                         f" trying a lower threshold ({backoff_threshold:.2f})...",
-    #                         icon="⚠️",
-    #                     )
-    #                     clusters = sbert_util.community_detection(
-    #                         embeddings, min_community_size=min_community_size, threshold=backoff_threshold
-    #                     )
+    # # Try lowering the threshold if no clusters are found
+    # backoff_threshold = threshold
+    # while len(clusters) < MIN_ARTICLES_TO_AVOID_BACKOFF and backoff_threshold > 0.9:
+    #     backoff_threshold -= BACKOFF_THRESHOLD
+    #     st.warning(
+    #         f"No clusters found with threshold {threshold},"
+    #         f" trying a lower threshold ({backoff_threshold:.2f})...",
+    #         icon="⚠️",
+    #     )
+    #     clusters = sbert_util.community_detection(
+    #         embeddings, min_community_size=min_community_size, threshold=backoff_threshold
+    #     )
 
     if not clusters:
         logger.warning("No clusters found for your query. Randomly sampling articles instead")
 
-    #                 max_cluster_size = len(max(clusters, key=len))
-    #                 min_cluster_size = len(min(clusters, key=len))
-    #                 avg_cluster_size = sum(len(cluster) for cluster in clusters) / len(clusters)
-    #                 st.success(
-    #                     f"Found {len(clusters)} clusters (max size: {max_cluster_size}, min size:"
-    #                     f" {min_cluster_size}, mean size: {avg_cluster_size:.1f}) matching your query",
-    #                     icon="✅",
-    #                 )
+    #     max_cluster_size = len(max(clusters, key=len))
+    #     min_cluster_size = len(min(clusters, key=len))
+    #     avg_cluster_size = sum(len(cluster) for cluster in clusters) / len(clusters)
+    #     st.success(
+    #         f"Found {len(clusters)} clusters (max size: {max_cluster_size}, min size:"
+    #         f" {min_cluster_size}, mean size: {avg_cluster_size:.1f}) matching your query",
+    #         icon="✅",
+    #     )
 
-    #                 if debug:
-    #                     st.info(
-    #                         f"The first {DEBUG_CLUSTER_SIZE} titles of the first {DEBUG_NUM_CLUSTERS} clusters, useful for"
-    #                         " spot checking the clustering. Clusters are sorted by decreasing size. The first"
-    #                         " element of each cluster is its centroid.\n"
-    #                         + "\n".join(
-    #                             f"\n__Cluster {i + 1}__ (size: {len(cluster)}):\n"
-    #                             + "\n".join(f"- {articles[idx]['title']}" for idx in cluster[:DEBUG_CLUSTER_SIZE])
-    #                             for i, cluster in enumerate(clusters[:DEBUG_NUM_CLUSTERS])
-    #                         )
-    #                     )
-    #             else:
-    #                 st.warning(
-    #                     f"Less than {MIN_ARTICLES_TO_CLUSTER} total publications found, skipping clustering...", icon="⚠️"
-    #                 )
+    #     if debug:
+    #         st.info(
+    #             f"The first {DEBUG_CLUSTER_SIZE} titles of the first {DEBUG_NUM_CLUSTERS} clusters, useful for"
+    #             " spot checking the clustering. Clusters are sorted by decreasing size. The first"
+    #             " element of each cluster is its centroid.\n"
+    #             + "\n".join(
+    #                 f"\n__Cluster {i + 1}__ (size: {len(cluster)}):\n"
+    #                 + "\n".join(f"- {articles[idx]['title']}" for idx in cluster[:DEBUG_CLUSTER_SIZE])
+    #                 for i, cluster in enumerate(clusters[:DEBUG_NUM_CLUSTERS])
+    #             )
+    #         )
+    # else:
+    #     st.warning(
+    #         f"Less than {MIN_ARTICLES_TO_CLUSTER} total publications found, skipping clustering...", icon="⚠️"
+    #     )
 
-    #             clusters = clusters or [[i] for i in range(len(articles))]
+    # clusters = clusters or [[i] for i in range(len(articles))]
     return clusters

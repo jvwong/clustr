@@ -60,10 +60,7 @@ def send_output(data: Dict[str, Any], fpath: str):
 ####################################################
 
 
-def get_article_clusters(
-    clusters: List[List[int]],
-    articles: List[Dict[str, Any]]
-):
+def get_article_clusters(clusters: List[List[int]], articles: List[Dict[str, Any]]):
     """Return a dictionary of clustered articles"""
     result = {}
     for count, cluster in enumerate(clusters):
