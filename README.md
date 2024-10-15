@@ -4,18 +4,15 @@ A command line tool that identifies communities of articles based on semantic si
 
 ## Requirements
 
-- [Python (version >=3.9)](https://www.python.org/)
+- [Python (version >=3.11)](https://www.python.org/)
 - [Poetry (version >=1.5.0)](https://python-poetry.org/)
-<!-- - [Docker (version 20.10.14) and Docker Compose (version 2.5.1)](https://www.docker.com/)
-  - We use Docker to create a [RethinkDB (v2.3.6)](https://rethinkdb.com/) instance for loading data. -->
 - [Miniconda](https://docs.conda.io/en/latest/miniconda.html) (Optional)
   - For creating virtual environments. Any other solution will work.
 - Graphics Processing Unit (GPU) (Optional)
-  - The pipeline classifier can be sped up an order of magnitude by running on a system with a GPU. We have been using a system running Ubuntu 18.04.5 LTS, Intel(R) Xeon(R) CPU E5-2687W, 24 Core with an NVIDIA GP102 [TITAN Xp] GPU.
 
 ## Usage
 
-Create a conda environment, here named `pipeline`:
+Create a conda environment, here named `clustr`:
 
 ```bash
 $ conda create --name clustr python=3.11 --yes
@@ -40,6 +37,19 @@ $ conda install -c conda-forge sentence-transformers --yes
 ```bash
 $ poetry install
 ```
+
+## Run clustering
+
+There is a command-line script `cli.py` to run against a json file:
+
+```bash
+$ python ./clustr/cli.py /data/2024-08-01_2024-10-15-alzheimer.json
+```
+
+- Arguments
+  - positional: path to json file
+  - `--threshold`: cosine similarity minimum threshold (default: 0.96)
+  - `--outpath`: path to output file (default: `data/cluster.json`)
 
 ## Testing
 
