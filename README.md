@@ -38,6 +38,9 @@ $ conda install -c conda-forge sentence-transformers --yes
 $ poetry install
 ```
 
+- Notes
+  - Couldn't get this to install on MacBook Pro Apple M2 Pro Chip
+
 ## Run clustering
 
 There is a command-line script `cli.py` to run against a json file:
