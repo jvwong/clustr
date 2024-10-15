@@ -18,8 +18,8 @@ A command line tool that identifies communities of articles based on semantic si
 Create a conda environment, here named `pipeline`:
 
 ```bash
-$ conda create --name clustr python=3.9 --yes
-$ conda activate pipeline
+$ conda create --name clustr python=3.11 --yes
+$ conda activate clustr
 ```
 
 Download the remote:
@@ -33,8 +33,6 @@ Install the dependencies:
 
 ```bash
 $ poetry install
-# //TODO Couldn't get this to play nice in poetry
-$ conda install -c conda-forge sentence-transformers
 ```
 
 ## Testing
