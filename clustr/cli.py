@@ -1,6 +1,7 @@
 import sys
 import argparse
 import json_stream
+import json
 
 from typing import IO, Generator, Dict, Any
 from loguru import logger
@@ -61,5 +62,12 @@ if __name__ == "__main__":
     reader = json2dict_reader(sys.stdin)
     # for item in reader:
     #     print(json.dumps(item, indent=2))
-    clusters = get(reader)
-    print(clusters)
+    clusters, articles = get(reader)
+
+    # print out clustered items
+    result = {}
+    for count, cluster in enumerate(clusters):
+        result[count] = [articles[index] for index in cluster]
+
+    with open("alzheimer-clusters.json", "w") as final:
+        json.dump(result, final, indent=2)

@@ -124,4 +124,4 @@ def get(reader: Generator[Any, None, None]) -> None:
     #                 )
 
     #             clusters = clusters or [[i] for i in range(len(articles))]
-    return clusters
+    return clusters, articles
