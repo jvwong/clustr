@@ -25,7 +25,7 @@ BACKOFF_THRESHOLD = 0.02  # The amount to reduce the cosine similarity by during
 ####################################################
 
 min_community_size = 2  # Minimum number of articles in a cluster
-threshold = 0.96  # Cosine similarity threshold for clustering
+# threshold = 0.96  # Cosine similarity threshold for clustering
 
 ####################################################
 #                  Cluster
@@ -64,7 +64,7 @@ def embed_evidence(articles: list[str], model: str, _batch_size: int = 32):
     return torch.cat(embeddings, dim=0)
 
 
-def get(articles: List[Dict[str, Any]]) -> List[List[int]]:
+def get(articles: List[Dict[str, Any]], threshold: float) -> List[List[int]]:
     logger.info("Running get")
     num_articles = len(articles)
 
@@ -76,7 +76,7 @@ def get(articles: List[Dict[str, Any]]) -> List[List[int]]:
         logger.error(msg)
         raise Exception(msg)
 
-    logger.info("Clustering evidence")
+    logger.info(f"Clustering {num_articles} articles (threshold: {threshold})")
     embeddings = embed_evidence(articles, model=SPECTER_MODEL)
     clusters = sbert_util.community_detection(embeddings, min_community_size=min_community_size, threshold=threshold)
 

@@ -47,6 +47,14 @@ def json2file(data: Dict[str, Any], fpath: str = "clusters.json"):
         json.dump(data, writer, indent=2)
 
 
+def send_output(data: Dict[str, Any], fpath: str):
+    """Send to stdout or write json to file"""
+    if fpath:
+        json2file(data, fpath)
+    else:
+        print(json.dumps(data, indent=2))
+
+
 ####################################################
 #                  Clusters
 ####################################################

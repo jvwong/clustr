@@ -19,7 +19,7 @@ from clustr import util
 parser = argparse.ArgumentParser()
 parser.add_argument("filename", type=str)
 parser.add_argument("--threshold", nargs="?", type=float, default=str(0.96))
-parser.add_argument("--outpath", nargs="?", type=str, default="data/clusters.json")
+parser.add_argument("--outpath", nargs="?", type=str)
 
 
 def get_args():
@@ -44,8 +44,8 @@ if __name__ == "__main__":
     articles = [article for article in reader]
     articles = util.sort_descending_by(articles, "date")
     articles = util.unique_by(articles, "doi")
-    clusters = cluster.get(articles)
+    clusters = cluster.get(articles, args.threshold)
     result = util.get_article_clusters(clusters, articles)
 
     # Write to file
-    util.json2file(result, args.outpath)
+    util.send_output(result, args.outpath)
