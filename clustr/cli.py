@@ -1,11 +1,10 @@
 import sys
 import argparse
-import json_stream
-import json
 
 from typing import IO, Generator, Dict, Any
 from loguru import logger
-from clustr.cluster import get
+from clustr import cluster
+import util
 
 ####################################################
 #            Logging
@@ -21,34 +20,18 @@ from clustr.cluster import get
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--threshold", nargs="?", type=float, default=str(0.990))
-# parser.add_argument('--table', nargs='?', type=str, default='documents')
-# parser.add_argument('--minyear', nargs='?', type=int, default=str(2021))
+parser.add_argument('--filepath', nargs='?', type=str, default='data/clusters.json')
 
 
 def get_opts():
     args = parser.parse_args()
     opts = {
         "threshold": args.threshold,
-        # 'table': args.table,
-        # 'minyear': args.minyear,
+        'filepath': args.filepath
     }
     if opts["threshold"] < 0 or opts["threshold"] > 1:
         raise ValueError("threshold must be on [0, 1]")
     return opts
-
-
-####################################################
-#                  Extract
-####################################################
-
-
-def json2dict_reader(
-    stream: IO,
-) -> Generator[Dict[str, Any], None, None]:
-    """Return a reader that streams json to list of dicts"""
-    data = json_stream.load(stream)
-    reader = json_stream.to_standard_types(data)
-    yield from reader
 
 
 ####################################################
@@ -59,15 +42,12 @@ if __name__ == "__main__":
     opts = get_opts()
     logger.info("Run config: {opts}", opts=opts)
 
-    reader = json2dict_reader(sys.stdin)
-    # for item in reader:
-    #     print(json.dumps(item, indent=2))
-    clusters, articles = get(reader)
+    # Stream in json data from stdin
+    reader = util.json2dict_reader(sys.stdin)
 
-    # print out clustered items
-    result = {}
-    for count, cluster in enumerate(clusters):
-        result[count] = [articles[index] for index in cluster]
+    # Cluster the data
+    clusters, articles = cluster.get(reader)
+    result = util.get_article_clusters(clusters, articles)
 
-    with open("alzheimer-clusters.json", "w") as final:
-        json.dump(result, final, indent=2)
+    # Write to file
+    util.json2file(result, opts.filepath)
