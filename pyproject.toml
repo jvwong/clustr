@@ -11,10 +11,8 @@ loguru = "^0.7.2"
 pydantic = "^2.9.2"
 json-stream = "^2.3.2"
 more-itertools = "^10.5.0"
-transformers = "^4.43.3"
 adapters = "^1.0.0"
 numpy = "^1"
-sentence-transformers = "^3.2.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.3"

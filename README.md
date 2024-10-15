@@ -31,6 +31,12 @@ $ cd clustr
 
 Install the dependencies:
 
+For Intel Mac [14.6.1 (23G93); 3.6 GHz 8-Core Intel Core i9]:
+
+```bash
+$ conda install -c conda-forge sentence-transformers --yes
+```
+
 ```bash
 $ poetry install
 ```
