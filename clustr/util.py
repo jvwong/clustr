@@ -8,14 +8,22 @@ from typing import Generator, Dict, Any, List
 ####################################################
 
 
-def sort_descending_by(collection: List[Dict[str, Any]], key: str) -> List[Dict[str, Any]]:
+def sort_descending_by(collection: List[Dict[str, Any]], k: str) -> List[Dict[str, Any]]:
     """Return a list of dictionaries sorted by key, descending"""
-    return sorted(collection, key=lambda d: d[key], reverse=True)
+    return sorted(collection, key=lambda d: d[k], reverse=True)
 
 
-def unique_by(collection: List[Dict[str, Any]], key: str) -> List[Dict[str, Any]]:
+def unique_by(collection: List[Dict[str, Any]], k: str) -> List[Dict[str, Any]]:
     """Return a list of unique dictionaries by key"""
-    return list({v[key]: v for v in collection}.values())
+    # TODO - is this right?
+    mapp = []
+    value_holder = set()
+    for item in collection:
+        v = item[k]
+        if v not in value_holder:
+            mapp.append(item)
+            value_holder.add(v)
+    return mapp
 
 
 ####################################################
